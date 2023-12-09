@@ -15,8 +15,15 @@
 #include "esp_log.h"
 #include "nvs_flash.h"
 
+
+// TCP/IP  Client Includes
+#include "esp_netif.h"
 #include "lwip/err.h"
 #include "lwip/sys.h"
+#include "lwip/netdb.h"
+#include "lwip/sockets.h"
+#include "lwip/dns.h"
+
 
 /* The examples use WiFi configuration that you can set via project configuration menu.
 
@@ -68,6 +75,7 @@ void wifi_init_softap(void)
             .ssid_len = strlen(ESP_WIFI_SSID),
             .channel = ESP_WIFI_CHANNEL,
             .password = ESP_WIFI_PASS,
+            .authmode = WIFI_AUTH_WPA2_PSK,
             .max_connection = MAX_STA_CONN,
             .pmf_cfg = {
                     .required = true,
@@ -76,8 +84,6 @@ void wifi_init_softap(void)
     };
     if (strlen(ESP_WIFI_PASS) == 0) {
         wifi_config.ap.authmode = WIFI_AUTH_OPEN;
-    }else {
-        wifi_config.ap.authmode = WIFI_AUTH_WPA2_PSK;
     }
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
@@ -87,6 +93,53 @@ void wifi_init_softap(void)
     ESP_LOGI(TAG, "wifi_init_softap finished. SSID:%s password:%s channel:%d",
              ESP_WIFI_SSID, ESP_WIFI_PASS, ESP_WIFI_CHANNEL);
 }
+
+
+// **** SENSOR DAT PUBLSIHER *******
+
+void tcpClientTask(void *pvParameters){
+    #define TARGET_IP_ADDR "192.168.4.2"
+    #define TARGET_PORT 2000
+    const char *TAG = "tcpClientTask";
+    ESP_LOGI(TAG, "Starting TCP Client Task");
+
+    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock < 0) {
+        ESP_LOGE(TAG, "Unable to create socket: errno %d", errno);
+        vTaskDelete(NULL);
+        return;
+    }
+    ESP_LOGI(TAG, "Socket created");
+
+    int broadcast_en = 1; // Enable Broadcast
+    setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcast_en, sizeof(broadcast_en));
+    
+    struct sockaddr_in server_addr;
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(2000);
+    server_addr.sin_addr.s_addr = inet_addr(TARGET_IP_ADDR);
+
+    //  block if there are no connections 
+    // very hacky, but it work
+    while(strcmp(connections[0] ,"")!=0){
+        ESP_LOGI(TAG,"NO CONNECTIONS");
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
+
+    ESP_LOGI(TAG, "Starting TCP Stream");
+    for(;;){
+        ESP_LOGI(TAG, "Sending Data");
+
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
+
+    ESP_LOGE(TAG, "Shutting down socket.");
+    close(sock);
+    vTaskDelete(NULL);
+}
+
+
+
 
 
 
