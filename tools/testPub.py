@@ -6,9 +6,6 @@ from logger import getmylogger
 import time
 
 
-
-
-
 class SimSensor():
 
     def __init__(self):
@@ -33,8 +30,6 @@ class SimSensor():
     
 
 
-
-
 def main(rate):
     pub = ctx.socket(zmq.PUB)
     pub.bind(pubAddr)
@@ -42,15 +37,15 @@ def main(rate):
     while(True):
         data = sensor.generate_data_for_topic()
         if data != "":
-            time.sleep(rate)
-            if debug:
-                print(data)
             try:
-                pub.send_string(data)   
-            
+                pub.send_string(data)  
+                if debug:
+                    print(data)
+                time.sleep(rate) 
             except Exception as e:
-               
                 log.error("Exeption in pubslish :", e)
+            except KeyboardInterrupt:
+                return 
             
            
     
@@ -64,4 +59,5 @@ if __name__ =="__main__":
     ctx = zmq.Context()
     sensor = SimSensor()
     main(0.1)
+
 
