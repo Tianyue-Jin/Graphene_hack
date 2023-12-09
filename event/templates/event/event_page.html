@@ -1,0 +1,105 @@
+{% extends "sitecore/base/default.html" %}
+{% load event_tags menu_tags rendition site_tags wagtailcore_tags wagtailimages_tags %}
+
+{% block body-class %}event-page{% endblock %}
+
+{% block page-content-main-header %}
+  <header>
+    {% if page.event_image %}
+      {% rendition page.event_image 'fill-1200x300' as photo %}
+      <div class="mb-4">
+	<img src="{{ photo.url }}" alt="{{ page.event_image.alt_text }}" class="img-full-width-md img-fluid rounded d-block" >
+      </div>
+    {% endif %}
+    <h1 class="mb-4">{{ self.title|default:self.seo_title }}</h1>
+    <div class="lead mb-4">
+      {{ page.intro | richtext }}
+    </div>
+    <hr>
+    {% for block in page.dates %}
+      {% with block.value as date %}
+	<h4><i class="fas fa-calendar"></i> {{ date.date }} <i class="fas fa-clock"></i>  {{ date.start_time|date:'H:i' }} &mdash; {{ date.end_time|date:'H:i' }}</h4>
+      {% endwith %} 
+    {% endfor %}
+    <h4>
+      {% if page.location_link %}<a href="{{ page.location_link }}"><i class="fas fa-map-marker"></i> {{ page.location }}</a>
+      {% else %}<i class="fas fa-map-marker"></i> {{ page.location }}{% endif %}
+    </h4>
+    <hr>
+  </header>
+{% endblock %}
+
+{% block page-content-main-article %}
+  <article>
+    {% include_block page.body with pid='page-body' filterspec='width-1200' %}
+  </article>
+  <hr>
+{% endblock %}
+
+{% block page-content-aside-slot-2-order %}order-1{% endblock %}
+{% block page-content-aside-slot-3-order %}order-2{% endblock %}
+{% block page-content-aside-slot-1-order %}order-3{% endblock %}
+
+{% block page-content-aside-slot-2 %}
+  {% if page.running_today or page.passed %}
+    <section>
+      <ul class="list-group">
+	{% if page.running_today %}
+	  <li class="list-group-item list-group-item-success d-flex justify-content-between align-items-center">
+	    {% if today_state %}{{ today_state.message }}{% endif %}
+	    </li>
+	{% elif page.passed %}
+	  <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">The event has now passed</li>
+	{% endif %}
+      </ul>
+    </section>
+  {% endif %}
+  
+  {% for block in page.event_type %}
+    {% include_block block %}
+  {% endfor %}
+
+{% endblock page-content-aside-slot-2 %}
+
+{% block page-content-aside-slot-3 %}
+  <section>
+    <ul class="list-group">
+      <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+	<strong><i class="fas fa-info-circle"></i> Page Details</strong>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+	{% page_author page %}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+	{% page_date_published page %}
+      </li>
+      {% if page.latest_revision_created_at %}
+	<li class="list-group-item d-flex justify-content-between align-items-center">
+	  {% page_date_revised page %}
+	</li>
+      {% endif %}
+    </ul>
+  </section>
+{% endblock page-content-aside-slot-3 %}
+
+{% if page.tags.all.count %}
+  {% block page-content-main-footer-meta %}
+    <footer role="tags">
+      {% taggit_list page.tags %}
+    </footer>
+  {% endblock page-content-main-footer-meta %}
+{% endif %}
+
+{% block page-content-main-footer-social %}
+  <footer role="social">
+    {% social_share_list page %}
+  </footer>
+{% endblock page-content-main-footer-social %}
+  
+{% block page-content-main-footer-nav %}
+  <footer role="nav">
+    <div class="my-3">
+      <p><strong><a href="{{ page.get_parent.url }}"><i class="fas fa-level-up-alt"></i> Return to {{ page.get_parent.title }}</a></strong></p>
+    </div>
+  </footer>
+{% endblock page-content-main-footer-nav %}

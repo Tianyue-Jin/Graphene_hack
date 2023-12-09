@@ -1,0 +1,70 @@
+{% extends "sitecore/base/default.html" %}
+{% load article_tags rendition site_tags wagtailcore_tags wagtailimages_tags %}
+
+{% block body-class %}article-page{% endblock %}
+
+{% block page-content-main-header %}
+  <header>
+    {% if self.article_image %}
+      {% rendition self.article_image self.article_image_filterspec as photo %}
+      <div class="mb-4">
+	<img src="{{ photo.url }}" filter-spec="{{ self.article_image_filterspec }}" alt="{{ self.article_image.alt_text }}" class="img-full-width-md img-fluid rounded d-block" >
+      </div>
+    {% endif %}
+    <h1 class="mb-4">{{ self.title|default:self.seo_title }}</h1>
+    <div class="lead mb-4">
+      {% include_block page.intro with pid='page-intro' filterspec='width-1200' %}
+    </div>
+    <hr>
+  </header>
+{% endblock %}
+
+{% block page-content-main-article %}
+  <article>
+    {% include_block page.body with pid='page-body' filterspec='width-1200' %}
+  </article>
+  <hr>
+{% endblock %}
+
+{% block page-content-aside-slot-1 %}
+  <section>
+    <ul class="list-group">
+      <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+	<strong><i class="fas fa-info-circle"></i> Article Details</strong>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+	{% page_author page %}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+	{% page_date_published page %}
+      </li>
+      {% if page.latest_revision_created_at %}
+	<li class="list-group-item d-flex justify-content-between align-items-center">
+	  {% page_date_revised page %}
+	</li>
+      {% endif %}
+    </ul>
+  </section>
+{% endblock %}
+
+{% if page.tags.all.count %}
+  {% block page-content-main-footer-meta %}
+    <footer role="tags">
+      {% taggit_list page.tags %}
+    </footer>
+  {% endblock page-content-main-footer-meta %}
+{% endif %}
+
+{% block page-content-main-footer-social %}
+  <footer role="social">
+    {% social_share_list page %}
+  </footer>
+{% endblock page-content-main-footer-social %}
+  
+{% block page-content-main-footer-nav %}
+  <footer role="nav">
+    <div class="my-3">
+      <p><strong><a href="{{ page.get_parent.url }}"><i class="fas fa-level-up-alt"></i> Return to {{ page.get_parent.title }}</a></strong></p>
+    </div>
+  </footer>
+{% endblock page-content-main-footer-nav %}

@@ -1,0 +1,188 @@
+admin
+ [X] 0001_initial
+ [X] 0002_logentry_remove_auto_add
+ [X] 0003_logentry_add_action_flag_choices
+article
+ (no migrations)
+auth
+ [X] 0001_initial
+ [X] 0002_alter_permission_name_max_length
+ [X] 0003_alter_user_email_max_length
+ [X] 0004_alter_user_username_opts
+ [X] 0005_alter_user_last_login_null
+ [X] 0006_require_contenttypes_0002
+ [X] 0007_alter_validators_add_error_messages
+ [X] 0008_alter_user_username_max_length
+ [X] 0009_alter_user_last_name_max_length
+ [X] 0010_alter_group_name_max_length
+ [X] 0011_update_proxy_permissions
+ [X] 0012_alter_user_first_name_max_length
+contenttypes
+ [X] 0001_initial
+ [X] 0002_remove_content_type_name
+event
+ (no migrations)
+home
+ (no migrations)
+sessions
+ [X] 0001_initial
+sitecore
+ (no migrations)
+siteuser
+ [X] 0001_initial
+taggit
+ [X] 0001_initial
+ [X] 0002_auto_20150616_2121
+ [X] 0003_taggeditem_add_unique_index
+ [X] 0004_alter_taggeditem_content_type_alter_taggeditem_tag
+wagtailadmin
+ [X] 0001_create_admin_access_permissions
+ [X] 0002_admin
+ [X] 0003_admin_managed
+wagtailcore
+ [X] 0001_squashed_0016_change_page_url_path_to_text_field (16 squashed migrations)
+ [X] 0017_change_edit_page_permission_description
+ [X] 0018_pagerevision_submitted_for_moderation_index
+ [X] 0019_verbose_names_cleanup
+ [X] 0020_add_index_on_page_first_published_at
+ [X] 0021_capitalizeverbose
+ [X] 0022_add_site_name
+ [X] 0023_alter_page_revision_on_delete_behaviour
+ [X] 0024_collection
+ [X] 0025_collection_initial_data
+ [X] 0026_group_collection_permission
+ [X] 0027_fix_collection_path_collation
+ [X] 0024_alter_page_content_type_on_delete_behaviour
+ [X] 0028_merge
+ [X] 0029_unicode_slugfield_dj19
+ [X] 0030_index_on_pagerevision_created_at
+ [X] 0031_add_page_view_restriction_types
+ [X] 0032_add_bulk_delete_page_permission
+ [X] 0033_remove_golive_expiry_help_text
+ [X] 0034_page_live_revision
+ [X] 0035_page_last_published_at
+ [X] 0036_populate_page_last_published_at
+ [X] 0037_set_page_owner_editable
+ [X] 0038_make_first_published_at_editable
+ [X] 0039_collectionviewrestriction
+ [X] 0040_page_draft_title
+ [X] 0041_group_collection_permissions_verbose_name_plural
+ [X] 0042_index_on_pagerevision_approved_go_live_at
+ [X] 0043_lock_fields
+ [X] 0044_add_unlock_grouppagepermission
+ [X] 0045_assign_unlock_grouppagepermission
+ [X] 0046_site_name_remove_null
+ [X] 0047_add_workflow_models
+ [X] 0048_add_default_workflows
+ [X] 0049_taskstate_finished_by
+ [X] 0050_workflow_rejected_to_needs_changes
+ [X] 0051_taskstate_comment
+ [X] 0052_pagelogentry
+ [X] 0053_locale_model
+ [X] 0054_initial_locale
+ [X] 0055_page_locale_fields
+ [X] 0056_page_locale_fields_populate
+ [X] 0057_page_locale_fields_notnull
+ [X] 0058_page_alias_of
+ [X] 0059_apply_collection_ordering
+ [X] 0060_fix_workflow_unique_constraint
+ [X] 0061_change_promote_tab_helpt_text_and_verbose_names
+ [X] 0062_comment_models_and_pagesubscription
+ [X] 0063_modellogentry
+ [X] 0064_log_timestamp_indexes
+ [X] 0065_log_entry_uuid
+ [X] 0066_collection_management_permissions
+ [X] 0067_alter_pagerevision_content_json
+ [X] 0068_log_entry_empty_object
+ [X] 0069_log_entry_jsonfield
+wagtaildocs
+ [X] 0001_initial
+ [X] 0002_initial_data
+ [X] 0003_add_verbose_names
+ [X] 0004_capitalizeverbose
+ [X] 0005_document_collection
+ [X] 0006_copy_document_permissions_to_collections
+ [X] 0005_alter_uploaded_by_user_on_delete_action
+ [X] 0007_merge
+ [X] 0008_document_file_size
+ [X] 0009_document_verbose_name_plural
+ [X] 0010_document_file_hash
+ [X] 0011_add_choose_permissions
+ [X] 0012_uploadeddocument
+wagtailembeds
+ [X] 0001_initial
+ [X] 0002_add_verbose_names
+ [X] 0003_capitalizeverbose
+ [X] 0004_embed_verbose_name_plural
+ [X] 0005_specify_thumbnail_url_max_length
+ [X] 0006_add_embed_hash
+ [X] 0007_populate_hash
+ [X] 0008_allow_long_urls
+ [X] 0009_embed_cache_until
+wagtailforms
+ [X] 0001_initial
+ [X] 0002_add_verbose_names
+ [X] 0003_capitalizeverbose
+ [X] 0004_add_verbose_name_plural
+ [X] 0005_alter_formsubmission_form_data
+wagtailimages
+ [X] 0001_squashed_0021 (21 squashed migrations)
+ [X] 0022_uploadedimage
+ [X] 0023_add_choose_permissions
+ [X] 0024_index_image_file_hash
+wagtailmedia
+ [X] 0001_initial
+ [X] 0002_initial_data
+ [X] 0003_copy_media_permissions_to_collections
+ [X] 0004_duration_optional_floatfield
+wagtailmenus
+ [X] 0001_initial
+ [X] 0002_auto_20160129_0901
+ [X] 0003_auto_20160129_2339
+ [X] 0004_auto_20160130_0024
+ [X] 0005_auto_20160130_2209
+ [X] 0006_auto_20160131_1347
+ [X] 0007_auto_20160131_2000
+ [X] 0008_auto_20160131_2327
+ [X] 0009_auto_20160201_0859
+ [X] 0010_auto_20160201_1558
+ [X] 0011_auto_20160415_1519
+ [X] 0012_auto_20160419_0039
+ [X] 0013_auto_20160423_1124
+ [X] 0014_auto_20160423_1339
+ [X] 0015_auto_20160423_1348
+ [X] 0016_auto_20160930_0645
+ [X] 0017_auto_20161013_1658
+ [X] 0018_auto_20161204_2043
+ [X] 0019_auto_20161204_2143
+ [X] 0020_auto_20161210_0004
+ [X] 0021_auto_20170106_2352
+ [X] 0022_auto_20170913_2125
+ [X] 0023_remove_use_specific
+wagtailredirects
+ [X] 0001_initial
+ [X] 0002_add_verbose_names
+ [X] 0003_make_site_field_editable
+ [X] 0004_set_unique_on_path_and_site
+ [X] 0005_capitalizeverbose
+ [X] 0006_redirect_increase_max_length
+ [X] 0007_add_autocreate_fields
+ [X] 0008_add_verbose_name_plural
+wagtailsearch
+ [X] 0001_initial
+ [X] 0002_add_verbose_names
+ [X] 0003_remove_editors_pick
+ [X] 0004_querydailyhits_verbose_name_plural
+ [X] 0005_create_indexentry
+ [X] 0006_customise_indexentry
+wagtailusers
+ [X] 0001_initial
+ [X] 0002_add_verbose_name_on_userprofile
+ [X] 0003_add_verbose_names
+ [X] 0004_capitalizeverbose
+ [X] 0005_make_related_name_wagtail_specific
+ [X] 0006_userprofile_prefered_language
+ [X] 0007_userprofile_current_time_zone
+ [X] 0008_userprofile_avatar
+ [X] 0009_userprofile_verbose_name_plural
+ [X] 0010_userprofile_updated_comments_notifications

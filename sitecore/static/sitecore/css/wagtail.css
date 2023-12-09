@@ -1,0 +1,15 @@
+.rich-text img.left {
+    float: left;
+    margin: 15px 15px 15px 0;
+}
+
+.rich-text img.right {
+    float: right;
+    margin: 15px 0 15px 15px;
+}
+
+.rich-text img.full-width {
+    width: 100%;
+    height: auto;
+    margin: 15px 0 15px 0;
+}

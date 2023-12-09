@@ -1,0 +1,33 @@
+{% load wagtailcore_tags %}
+{% if view == "summary" %}
+  <span class="badge bg-secondary"><i class="fas fa-users"></i> Open Meeting</span>
+  {% if today_state %}<span class="badge bg-info">{{ today_state.message }}</span>{% endif %}
+{% elif view == "readmore" %}View all the details <i class="fa fa-arrow-circle-right"></i>
+{% else %}
+  <section>
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-primary">
+	<strong><i class="fas fa-users"></i> Open Meeting</strong>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+	{{ self.details }}
+      </li>
+      {% if self.link %}
+	<li class="list-group-item d-flex justify-content-between align-items-center">
+	  <a class="btn btn-block my-1 btn-dark {% if reg_closed %}disabled{% endif %}"
+	     href="{{ self.link }}">
+	    <span class="text-uppercase"><i class="fas fa-external-link-alt"></i> Information</span>
+	  </a>
+	</li>
+      {% endif %}
+      {% if self.email %}
+	<li class="list-group-item d-flex justify-content-between align-items-center">
+	  <a class="btn btn-block my-1 btn-dark {% if passed %}disabled{% endif %}"
+	     href="mailto:{{ self.email }}">
+	    <span class="text-uppercase"><i class="fas fa-envelope"></i> Email</span>
+	  </a>
+	</li>
+      {% endif %}
+    </ul>
+  </section>
+{% endif %}

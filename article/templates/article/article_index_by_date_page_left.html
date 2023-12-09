@@ -1,0 +1,89 @@
+{% extends "sitecore/base/default.html" %}
+{% load article_tags rendition wagtailcore_tags wagtailimages_tags site_tags %}
+
+{% block body-class %}article-index-by-date-page{% endblock %}
+
+{% block page-content-main-header %}
+  {% if page.display_title %}
+    <h1 class="mb-4">{{ page.title|default:page.seo_title }}</h1>
+  {% endif %}
+  {% if page.display_intro and page.intro %}
+    <div class="lead mb-4">
+      {% include_block page.intro with pid='page-index-intro' filterspec='width-1200' %}
+    </div>
+  {% endif %}
+{% endblock page-content-main-header %}
+
+{% block page-content-main-article %}
+  {% for post in articles_paginated %}
+    {% with post=post.specific %}
+        {% article_blog_summary post show_taggit=True display_meta=page.display_meta %}
+    {% endwith %}
+  {% endfor %}
+{% endblock page-content-main-article %}
+
+{% block page-content-aside-slot-1 %}
+  <section>
+    <ul class="list-group">
+      <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center" data-toggle="collapse" href="#collapse_filter" role="button" aria-expanded="false" aria-controls="collapse_filter">
+	      <strong>Articles Filtered by:</strong>
+        <style>
+          [aria-expanded="false"] > .expanded,
+          [aria-expanded="true"] > .collapsed {
+            display: none;
+          }
+        </style>
+        <span class="collapsed"><i class="fas fa-chevron-down"></i></span>
+        <span class="expanded"><i class="fas fa-chevron-up"></i></span>
+      </li>
+      <div class="collapse" id="collapse_filter">
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <form action="{% pageurl page %}" id='filter-form' method="GET">
+              <span>Filter by:</span>
+              {% if not page.filter_by_day %}
+                <style>
+                  #id_selected_date_day {
+                    display: none;
+                  }
+                </style>
+              {% endif %}
+              {{ form.selected_date }}
+              <br><br>
+              <input id='filter_button' name='filter_button' type="submit" class="btn btn-primary btn-block" value="Filter" />
+            </form>
+          </li>
+        </ul>
+      </div>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+	      {% if day or month or year %}
+	        {% if day and month and year %}
+            <span>{{ day }} {{ month }} {{ year }}</span>
+	        {% elif day and month %}
+            <span>{{ day }} {{ month }}</span>
+	        {% elif month and year %}
+            <span>{{ month }} {{ year }}</span>
+	        {% elif day and year %}
+            <span>{{ day }} of every month in {{ year }}</span>
+	        {% elif day %}
+            <span>{{ day }}</span>
+          {% elif month %}
+            <span>{{ month }}</span>
+          {% elif year %}
+            <span>{{ year }}</span>
+          {% endif %}
+        {% else %}
+	        <span>Showing All</span>
+	      {% endif %}
+      </li>
+    </ul>
+  </section>
+{% endblock page-content-aside-slot-1 %}
+
+{% block page-content-main-footer-nav %}
+  {% if paginator_count > 1 %}
+    <footer class="my-4" role="pagination">
+      {% index_pagination articles_paginated paginator_range page.url url_params %}  
+    </footer>
+  {% endif %}
+{% endblock page-content-main-footer-nav %}
