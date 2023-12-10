@@ -25,6 +25,10 @@
 #include <lwip/netdb.h>
 
 
+// ADC 
+#include "driver/gpio.h"
+#include "driver/adc.h"
+#include "esp_adc_cal.h"
 
 /* The examples use WiFi configuration that you can set via project configuration menu.
 
@@ -42,6 +46,22 @@ TaskHandle_t udpTaskH;
 // **** SENSOR DAT PUBLSIHER *******
 #define HOST_IP_ADDR "192.168.4.2"
 #define PORT 12345
+
+#define ADC_WIDTH_BIT 12 // ADC data width
+
+
+void initialize_adc() {
+    adc1_config_width(ADC_WIDTH_BIT_12); // Set ADC data width to 12 bits
+    adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11); // Set attenuation of ADC input channel
+}
+
+
+float convert_to_voltage(int raw_value) {
+    float voltage = (raw_value / (float)(1 << ADC_WIDTH_BIT)) * 3.3; // Convert raw ADC value to voltage
+    return voltage;
+}
+
+
 
 void udpTask(void *pvParameters){
     bool running =false;
@@ -69,21 +89,28 @@ void udpTask(void *pvParameters){
 
     ESP_LOGI(TAG, "Socket created, sending to %s:%d", HOST_IP_ADDR, PORT);
 
-    char buffer[20];
-    float val;
 
+
+
+    char buffer[20];
+    float test;
+    uint32_t adc_val;
+    float val;
     while(running){
-        val = ((float)rand() / RAND_MAX);
-        sprintf(buffer, "%f:%f", val, val);
+        test = ((float)rand() / RAND_MAX);
+        adc_val = adc1_get_raw(ADC1_CHANNEL_0);
+        val = convert_to_voltage(adc_val);
+        
+        sprintf(buffer, "%f:%f", val+0.5, val);
         int err = sendto(sock, buffer, strlen(buffer), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
             if (err < 0) {
                 ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
                 break;
             }
-            ESP_LOGI(TAG, "Message sent");
+            ESP_LOGI(TAG, "Message sent %f\n", val);
 
 
-        vTaskDelay(250 / portTICK_PERIOD_MS);
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
     if (sock != -1) {
             ESP_LOGE(TAG, "Shutting down socket");
@@ -185,6 +212,8 @@ void app_main(void)
     }
     ESP_ERROR_CHECK(ret);
     
+    // init adc
+    initialize_adc();
 
     ESP_LOGI(TAG, "ESP_WIFI_MODE_AP");
     wifi_init_softap();
