@@ -16,13 +16,14 @@
 #include "nvs_flash.h"
 
 
-// TCP/IP  Client Includes
-#include "esp_netif.h"
+// UDP/IP  Client Includes
+#include "protocol_examples_common.h"
+
 #include "lwip/err.h"
-#include "lwip/sys.h"
-#include "lwip/netdb.h"
 #include "lwip/sockets.h"
-#include "lwip/dns.h"
+#include "lwip/sys.h"
+#include <lwip/netdb.h>
+
 
 
 /* The examples use WiFi configuration that you can set via project configuration menu.
@@ -33,9 +34,69 @@
 #define ESP_WIFI_SSID      "GROUP3WIFI"
 #define ESP_WIFI_PASS      "letmein1234"
 #define ESP_WIFI_CHANNEL   6
-#define MAX_STA_CONN       4
+#define MAX_STA_CONN       1
 
 static const char *TAG = "wifi softAP";
+
+TaskHandle_t udpTaskH;
+// **** SENSOR DAT PUBLSIHER *******
+#define HOST_IP_ADDR "192.168.4.2"
+#define PORT 12345
+
+void udpTask(void *pvParameters){
+    bool running =false;
+
+    int addr_family = 0;
+    int ip_protocol = 0;
+    struct sockaddr_in dest_addr;
+        dest_addr.sin_addr.s_addr = inet_addr(HOST_IP_ADDR);
+        dest_addr.sin_family = AF_INET;
+        dest_addr.sin_port = htons(PORT);
+        addr_family = AF_INET;
+        ip_protocol = IPPROTO_IP;
+
+    int sock = socket(addr_family, SOCK_DGRAM, ip_protocol);
+        if (sock < 0) {
+            ESP_LOGE(TAG, "Unable to create socket: errno %d", errno);
+            running = false;
+        }
+    running = true;
+    // set timeout
+    struct timeval timeout;
+        timeout.tv_sec = 10;
+        timeout.tv_usec = 0;
+        setsockopt (sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout);
+
+    ESP_LOGI(TAG, "Socket created, sending to %s:%d", HOST_IP_ADDR, PORT);
+
+    char buffer[20] = "HelloWorld\n";
+
+    while(running){
+
+        int err = sendto(sock, buffer, strlen(buffer), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
+            if (err < 0) {
+                ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
+                break;
+            }
+            ESP_LOGI(TAG, "Message sent");
+
+
+
+
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
+    }
+    if (sock != -1) {
+            ESP_LOGE(TAG, "Shutting down socket");
+            shutdown(sock, 0);
+            close(sock);
+        }
+        vTaskDelete(NULL);
+}
+
+
+
+
+
 
 
 // Notifies of wifi Connection events
@@ -46,10 +107,12 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
         wifi_event_ap_staconnected_t* event = (wifi_event_ap_staconnected_t*) event_data;
         ESP_LOGI(TAG, "station "MACSTR" join, AID=%d",
                  MAC2STR(event->mac), event->aid);
+        xTaskCreate(udpTask, "udp_client", 4096, NULL, 5, &udpTaskH);
     } else if (event_id == WIFI_EVENT_AP_STADISCONNECTED) {
         wifi_event_ap_stadisconnected_t* event = (wifi_event_ap_stadisconnected_t*) event_data;
         ESP_LOGI(TAG, "station "MACSTR" leave, AID=%d",
                  MAC2STR(event->mac), event->aid);
+        vTaskDelete(udpTaskH);
     }
 }
 
@@ -95,48 +158,16 @@ void wifi_init_softap(void)
 }
 
 
-// **** SENSOR DAT PUBLSIHER *******
 
-void tcpClientTask(void *pvParameters){
-    #define TARGET_IP_ADDR "192.168.4.2"
-    #define TARGET_PORT 2000
-    const char *TAG = "tcpClientTask";
-    ESP_LOGI(TAG, "Starting TCP Client Task");
 
-    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if (sock < 0) {
-        ESP_LOGE(TAG, "Unable to create socket: errno %d", errno);
-        vTaskDelete(NULL);
-        return;
-    }
-    ESP_LOGI(TAG, "Socket created");
 
-    int broadcast_en = 1; // Enable Broadcast
-    setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcast_en, sizeof(broadcast_en));
-    
-    struct sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(2000);
-    server_addr.sin_addr.s_addr = inet_addr(TARGET_IP_ADDR);
 
-    //  block if there are no connections 
-    // very hacky, but it work
-    while(strcmp(connections[0] ,"")!=0){
-        ESP_LOGI(TAG,"NO CONNECTIONS");
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
 
-    ESP_LOGI(TAG, "Starting TCP Stream");
-    for(;;){
-        ESP_LOGI(TAG, "Sending Data");
 
-        vTaskDelay(100 / portTICK_PERIOD_MS);
-    }
 
-    ESP_LOGE(TAG, "Shutting down socket.");
-    close(sock);
-    vTaskDelete(NULL);
-}
+
+
+
 
 
 
@@ -152,7 +183,10 @@ void app_main(void)
       ret = nvs_flash_init();
     }
     ESP_ERROR_CHECK(ret);
+    
 
     ESP_LOGI(TAG, "ESP_WIFI_MODE_AP");
     wifi_init_softap();
+
+   
 }
