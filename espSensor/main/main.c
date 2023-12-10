@@ -69,10 +69,12 @@ void udpTask(void *pvParameters){
 
     ESP_LOGI(TAG, "Socket created, sending to %s:%d", HOST_IP_ADDR, PORT);
 
-    char buffer[20] = "HelloWorld\n";
+    char buffer[20];
+    float val;
 
     while(running){
-
+        val = ((float)rand() / RAND_MAX);
+        sprintf(buffer, "%f:%f", val, val);
         int err = sendto(sock, buffer, strlen(buffer), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
             if (err < 0) {
                 ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
@@ -81,9 +83,7 @@ void udpTask(void *pvParameters){
             ESP_LOGI(TAG, "Message sent");
 
 
-
-
-        vTaskDelay(2000 / portTICK_PERIOD_MS);
+        vTaskDelay(250 / portTICK_PERIOD_MS);
     }
     if (sock != -1) {
             ESP_LOGE(TAG, "Shutting down socket");
@@ -107,6 +107,7 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
         wifi_event_ap_staconnected_t* event = (wifi_event_ap_staconnected_t*) event_data;
         ESP_LOGI(TAG, "station "MACSTR" join, AID=%d",
                  MAC2STR(event->mac), event->aid);
+        vTaskDelay(2000/ portTICK_PERIOD_MS);
         xTaskCreate(udpTask, "udp_client", 4096, NULL, 5, &udpTaskH);
     } else if (event_id == WIFI_EVENT_AP_STADISCONNECTED) {
         wifi_event_ap_stadisconnected_t* event = (wifi_event_ap_stadisconnected_t*) event_data;
@@ -138,7 +139,7 @@ void wifi_init_softap(void)
             .ssid_len = strlen(ESP_WIFI_SSID),
             .channel = ESP_WIFI_CHANNEL,
             .password = ESP_WIFI_PASS,
-            .authmode = WIFI_AUTH_WPA2_PSK,
+            .authmode = WIFI_AUTH_OPEN,
             .max_connection = MAX_STA_CONN,
             .pmf_cfg = {
                     .required = true,
