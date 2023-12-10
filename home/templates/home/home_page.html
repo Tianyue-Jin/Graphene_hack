@@ -1,10 +1,12 @@
 {% extends "sitecore/base/default.html" %}
 {% load rendition shortcodes article_tags site_tags static wagtailcore_tags wagtailimages_tags %}
 
-
 {% block head-js-extension %}
+
+{% comment %} <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script> {% endcomment %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script>
+<script src="{% static 'home/js/chart.js' %}"></script>
+
 
 {% endblock %}
 
@@ -78,53 +80,9 @@
     <section class="my-4">
       {% include_block page.body with pid='page-body' filterspec='width-1200' %}
       <body>
-        <!-- Your existing template content -->
+        {% comment %} <canvas id="myChart" width="400" height="200"></canvas> {% endcomment %}
+        <canvas id="line-chart" width="800" height="450"></canvas>
       
-        <!-- Real-time Chart Script -->
-        <canvas id="myChart" width="400" height="200"></canvas>
-      
-        <script>
-          const socket = io();
-      
-          const ctx = document.getElementById('myChart').getContext('2d');
-          const myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: [],
-              datasets: [{
-                label: 'Real-time Data',
-                data: [],
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                fill: false
-              }]
-            },
-            options: {
-              scales: {
-                x: [{
-                  type: 'linear',
-                  position: 'bottom'
-                }]
-              }
-            }
-          });
-      
-          socket.on('data', (data) => {
-            // Update chart data
-            myChart.data.labels.push(myChart.data.labels.length);
-            myChart.data.datasets[0].data.push(data);
-      
-            // Limit the number of data points to display
-            const maxDataPoints = 10;
-            if (myChart.data.labels.length > maxDataPoints) {
-              myChart.data.labels.shift();
-              myChart.data.datasets[0].data.shift();
-            }
-      
-            // Update the chart
-            myChart.update();
-          });
-        </script>
       </body>
       
     </section>
