@@ -1,0 +1,17 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.adapterTargetName": "esp32",
+    "idf.customExtraPaths": "/Users/rodrigoscott/.espressif/tools/xtensa-esp-elf-gdb/11.2_20220823/xtensa-esp-elf-gdb/bin:/Users/rodrigoscott/.espressif/tools/riscv32-esp-elf-gdb/11.2_20220823/riscv32-esp-elf-gdb/bin:/Users/rodrigoscott/.espressif/tools/xtensa-esp32-elf/esp-2022r1-11.2.0/xtensa-esp32-elf/bin:/Users/rodrigoscott/.espressif/tools/xtensa-esp32s2-elf/esp-2022r1-11.2.0/xtensa-esp32s2-elf/bin:/Users/rodrigoscott/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/bin:/Users/rodrigoscott/.espressif/tools/riscv32-esp-elf/esp-2022r1-11.2.0/riscv32-esp-elf/bin:/Users/rodrigoscott/.espressif/tools/esp32ulp-elf/2.35_20220830/esp32ulp-elf/bin:/Users/rodrigoscott/.espressif/tools/cmake/3.24.0/CMake.app/Contents/bin:/Users/rodrigoscott/.espressif/tools/openocd-esp32/v0.12.0-esp32-20230419/openocd-esp32/bin:/Users/rodrigoscott/.espressif/tools/ninja/1.10.2:/Users/rodrigoscott/.espressif/tools/esp-rom-elfs/20220823",
+    "idf.customExtraVars": {
+        "OPENOCD_SCRIPTS": "/Users/rodrigoscott/.espressif/tools/openocd-esp32/v0.12.0-esp32-20230419/openocd-esp32/share/openocd/scripts",
+        "ESP_ROM_ELF_DIR": "/Users/rodrigoscott/.espressif/tools/esp-rom-elfs/20220823/"
+    },
+    "idf.espIdfPath": "/Users/rodrigoscott/esp/esp-idf",
+    "idf.openOcdConfigs": [
+        "board/esp32-wrover-kit-3.3v.cfg"
+    ],
+    "idf.port": "/dev/cu.usbserial-0001",
+    "idf.pythonBinPath": "/Users/rodrigoscott/.espressif/python_env/idf5.0_py3.11_env/bin/python",
+    "idf.toolsPath": "/Users/rodrigoscott/.espressif",
+    "idf.flashType": "UART"
+}
